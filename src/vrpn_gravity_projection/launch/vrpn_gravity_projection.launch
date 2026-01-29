@@ -1,0 +1,51 @@
+<!-- 
+  VRPN重力投影节点启动文件
+  用于从VRPN位姿数据计算重力投影向量
+-->
+<launch>
+  <!-- VRPN服务器参数 -->
+  <arg name="server" default="172.16.21.168" />
+  <arg name="rigid_body" default="Rigid" />
+  
+  <!-- 重力投影节点参数 -->
+  <arg name="vrpn_topic" default="/vrpn_client_node/$(arg rigid_body)/pose" />
+  <arg name="gravity_topic" default="/projected_gravity" />
+  <arg name="gravity_x" default="0.0" />
+  <arg name="gravity_y" default="0.0" />
+  <arg name="gravity_z" default="-1.0" />
+  <arg name="change_threshold" default="0.1" />
+  
+  <!-- 速度投影参数 -->
+  <arg name="enable_velocity" default="false" />
+  <arg name="velocity_topic" default="/projected_velocity" />
+  <arg name="velocity_source" default="pose_diff" />
+  <arg name="twist_topic" default="/vrpn_client_node/$(arg rigid_body)/twist" />
+  <arg name="debug" default="false" />
+
+  <!-- 角速度投影参数 -->
+  <arg name="enable_ang_velocity" default="false" />
+  <arg name="ang_velocity_topic" default="/projected_omega" />
+  <arg name="ang_velocity_source" default="pose_diff" />
+
+  
+  <!-- 启动VRPN客户端连接动捕设备 -->
+  <include file="$(find vrpn_client_ros)/launch/sample.launch">
+    <arg name="server" value="$(arg server)" />
+  </include>
+  
+  <!-- 启动重力投影节点 -->
+  <node name="vrpn_gravity_projection" pkg="vrpn_gravity_projection" type="vrpn_gravity_projection" output="screen">
+    <param name="vrpn_topic" value="$(arg vrpn_topic)" />
+    <param name="gravity_topic" value="$(arg gravity_topic)" />
+    <param name="change_threshold" value="$(arg change_threshold)" />
+    <param name="enable_velocity" value="$(arg enable_velocity)" />
+    <param name="velocity_topic" value="$(arg velocity_topic)" />
+    <param name="velocity_source" value="$(arg velocity_source)" />
+    <param name="twist_topic" value="$(arg twist_topic)" />
+    <param name="debug" value="$(arg debug)" />
+    <param name="enable_ang_velocity" value="$(arg enable_ang_velocity)" />
+    <param name="ang_velocity_topic" value="$(arg ang_velocity_topic)" />
+    <param name="ang_velocity_source" value="$(arg ang_velocity_source)" />
+    <rosparam param="gravity_vector">[$(arg gravity_x), $(arg gravity_y), $(arg gravity_z)]</rosparam>
+  </node>
+</launch>

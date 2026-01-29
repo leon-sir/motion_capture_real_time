@@ -1,0 +1,21 @@
+<launch>
+    <arg name="server" default="172.16.21.168"/>
+    <arg name="port" default="3883"/>
+    <arg name="rigid_body_name" default="Rigid"/> <node pkg="vrpn_client_ros" type="vrpn_client_node" name="vrpn_client_node" output="screen">
+        <param name="server" value="$(arg server)" />
+        <param name="port" value="$(arg port)" />
+        <param name="update_frequency" value="100.0" />
+        <param name="frame_id" value="world" />
+        <param name="use_server_time" value="false" />
+        <param name="broadcast_tf" value="true" />
+        <param name="refresh_tracker_frequency" value="1.0" />
+    </node>
+
+    <node name="reset_four_element" pkg="vrpn_gravity_projection" type="reset_four_element" output="screen">
+        <param name="vrpn_topic" value="/vrpn_client_node/$(arg rigid_body_name)/pose" />
+        <param name="debug" value="true" />
+        <param name="lpf_alpha_omega" value="0.15" />
+        <param name="lpf_alpha_vel" value="0.2" />
+    </node>
+
+</launch>

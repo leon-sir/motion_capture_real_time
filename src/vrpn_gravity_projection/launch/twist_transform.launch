@@ -1,0 +1,17 @@
+<!-- 
+  Twist坐标系转换节点启动文件
+  将世界坐标系的Twist转换到本体坐标系
+-->
+<launch>
+  <!-- 参数 -->
+  <arg name="pose_topic" default="/vrpn_client_node/Rigid/pose" />
+  <arg name="twist_world_topic" default="/twist_world" />
+  <arg name="twist_body_topic" default="/twist_body" />
+  
+  <!-- 启动Twist转换节点 -->
+  <node name="twist_transform" pkg="vrpn_gravity_projection" type="twist_transform" output="screen">
+    <param name="pose_topic" value="$(arg pose_topic)" />
+    <param name="twist_world_topic" value="$(arg twist_world_topic)" />
+    <param name="twist_body_topic" value="$(arg twist_body_topic)" />
+  </node>
+</launch>
